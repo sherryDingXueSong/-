@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  </head>
+  <body>
+    <button id="btn">代理</button>
+    <button id="btn2">服务器端配置</button>
+    <button id="btn3">jsonp(get请求)</button>
+    <script>
+      /* 解决跨域的三种方法 */
+
+      /* 1.使用代理解决跨域问题*/
+
+      $("#btn").click(function() {
+        $.ajax({
+          //先请求本地服务器（即代理服务器）
+          url: "http://localhost:3000/test",
+          type: "POST",
+          data: {
+            username: "fy",
+            userpwd: "123"
+          },
+          success: function(res) {
+            console.log(res);
+          },
+          error: function(err) {
+            console.log(err);
+          }
+        });
+      });
+
+      /* 2. 直接请求目标服务器会出现跨域的问题， 这里使用 服务器端配置允许所有域访问 的方法，需要改变服务器端代码*/
+      $("#btn2").click(function() {
+        $.ajax({
+          url: "http://localhost:4000/test222",
+          type: "POST",
+          data: {
+            username: "fy",
+            userpwd: "123"
+          },
+          success: function(res) {
+            console.log(res);
+          },
+          error: function(err) {
+            console.log(err);
+          }
+        });
+      });
+
+      /* 3. 使用jsonp解决跨域问题， 只适用于get请求*/
+      const username = "song";
+      const userpwd = "0315";
+      $("#btn3").click(function() {
+        $.ajax({
+          url: `http://localhost:4000/get?username=${username}&userpwd=${userpwd}`,
+          type: "GET",
+          dataType: "jsonp",
+          jsonp: "callback",
+          success: function(res) {
+            console.log(res);
+          },
+          error: function(err) {
+            console.log(err);
+          }
+        });
+      });
+
+      window.callback = function(username, userpwd) {
+        console.log("callback============>", username, userpwd);
+      };
+    </script>
+  </body>
+</html>
